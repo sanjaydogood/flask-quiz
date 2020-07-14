@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="container" style="position:relative">
+      <div  class="title-middle">
+          <h1 ><b>Welcome!</b></h1>
+        <p class="faded">
+            (Placeholder text) Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut             labore et dolore  magna aliqua. Commodo nulla facilisi nullam vehicula ipsum. Sed risus ultricies tristique                 nulla aliquet enim tortor
+        </p>
+      </div>
+    </div>
+<br id="temp">
+
+
+<div class="container" >
+    <div class="q-option">
+        <p style="color:white" class="faded" id="rcorners2">
+            <i>* Required</i>
+        </p>
+        </div>
+</div>
+<form method="post" id="q_form">
+
+<div class="container" id="questions-container">
+    {% for question in qs %}
+        {% set q_no = 'Q' + loop.index|string %}
+    <div class="container question" id="{{q_no}}:{{question['Type']}}">
+    <!--        Below div is for question                       -->
+            <div class="question-middle" id="{{q_no}}-question">
+                {% if question['Question']|length == 1 %}
+                <p class="faded">
+                        {% if question['Required'] == "Yes" %}
+                         {{loop.index}}. {{question['Question'][0]}}<sup id="sup_ele">*</sup>
+                        {% else %}
+                         {{loop.index}}. {{question['Question'][0]}}
+                        {% endif %}
+                </p>
+                {% else %}
+
+                <p class="faded">
+                         {{loop.index}}. {{question['Question'][0]}}
+                </p>
+
+                {% for que in question['Question'][1:] %}
+                    {% if que == question['Question'][-1] %}
+                    <p class="faded">
+                        {{que}}<sup id="sup_ele">*</sup>
+                    </p>
+                    {% else %}
+                    <p class="faded">
+                        {{que}}
+                    </p>
+                    {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+    <!------------------------------------------------------------>
+    <!--        Below div is for options if any based on type   -->
+    <!--        Below div is for type radio button              -->
+         {% if question['Type'] == 'radio' or question['Type'] == 'Radio' %}
+            <div class="container" id="{{q_no}}-options">
+                {% for option in question['Options'] %}
+                <div class="container_r" id="{{q_no}}-option{{loop.index}}">
+                    <label class="container_cus" >{{option}}
+                      <input type="radio" name ={{q_no}}  name="{{q_no}}">
+                      <span class="checkmark"></span>
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+    <!------------------------------------------------------------>
+    <!--        Below div is for type check box              -->
+        {% elif question['Type'] == 'check' or question['Type'] == 'Check' %}
+
+            <div class="container" id="{{q_no}}-options">
+                {% for option in question['Options'] %}
+                    {% set check_id = 'checkbox' + loop.index|string %}
+                    {% if option=='Others' %}
+                        <div  class="container_c" id="{{q_no}}-option{{loop.index}}-other">
+                            <label  class="container_cus">{{option}}
+                              <input type="checkbox" name ="{{q_no}}" id="{{q_no}}-{{check_id}}-others">
+                              <span class="checkmark_checkbox"></span>
+                            </label>
+
+                            <div id="{{q_no}}-option{{loop.index}}-textarea" class="container textar">
+                            <div   style="display:none" id="textarea-div" class="md-form amber-textarea active-amber-textarea" align="center">
+                              <textarea id="textarea-{{loop.index}}" class="md-textarea form-control" rows="3"
+                                style="resize:none;overflow-y: scroll;"></textarea>
+                              <label for="textarea-{{loop.index}}">Please type here...</label>
+                            </div>
+                        </div>
+
+                        </div>
+
+                    {% else %}
+                        <div class="container_c" id="{{q_no}}-option{{loop.index}}">
+                            <label class="container_cus">{{option}}
+                              <input type="checkbox" name ="{{q_no}}" id="{{check_id}}">
+                              <span class="checkmark_checkbox"></span>
+                            </label>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+    <!------------------------------------------------------------>
+    <!--           Below div is for type text box               -->
+        {% elif question['Type'] == 'text' or question['Type'] == 'Text' %}
+            <div  id = "{{q_no}}-options" class="container textar" >
+                <div id="textarea-div" class="md-form amber-textarea active-amber-textarea"
+                                                    align="center">
+                  <textarea id="{{q_no}}-textarea" class="md-textarea form-control c_f" rows="3" style="resize:none;
+                                                                   overflow-y: scroll;"></textarea>
+                  <label for="{{q_no}}-textarea">Please type here...</label>
+                </div>
+            </div>
+
+    <!------------------------------------------------------------>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+
+<!--    <input type="hidden" name="json_data" value="" />-->
+</div>
+    <input type="hidden" name="json_data" value="" />
+</form>
+<!-----------------   Submit button     ---------------------->
+    <div class="container" style="text-align:center;padding-top:20px">
+        <button type="submit" id ="submit-btn"  onclick="validate_fields()" class="btn success">Submit</button>
+    </div>
+<!------------------------------------------------------------>
+{% endblock %}
