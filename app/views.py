@@ -1,6 +1,6 @@
 from app import app
 import json
-from flask import render_template,request,app as a
+from flask import render_template,request
 import pandas as pd
 from ordered_set import OrderedSet
 from app.save_data import save_json_data
